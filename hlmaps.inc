@@ -1,36 +1,29 @@
 <?php /*###################################################################*/
-/*# hlmaps.inc																														#*/
-/*#  - Function definitions for hlmaps routines 													#*/
-/*#  - Copyright Brian Porter and Scott McCrory 													#*/
-/*#  - Distributed under the GPL terms - see docs for info								#*/
-/*#  - http://hlmaps.sourceforge.net																			#*/
-/*# 																																			#*/
+/*# hlmaps.inc                                                            #*/
+/*#  - Function definitions for hlmaps routines                           #*/
+/*#  - Copyright Brian Porter and Scott McCrory                           #*/
+/*#  - Distributed under the GPL terms - see docs for info                #*/
+/*#  - http://hlmaps.sourceforge.net                                      #*/
+/*#                                                                       #*/
 /*#########################################################################*/
 /*# CVS $Id$
 /*#########################################################################*/
 
 
 /***************************************************************************/
-/* CHANGE THIS TO POINT TO YOUR "hlmaps.conf" 														 */
-// Absolute filesystem path to config file
-//	 i.e.: "/etc/hlmaps/hlmaps.conf" or "C:/hlmaps/hlmaps.conf"
-$CONFIG_FILE = "C:/hlmaps-php/php/hlmaps.conf";
-
-
-/***************************************************************************/
-/**** 																																	****/
-/**** 						# NO NEED TO EDIT BELOW THIS POINT #									****/
-/**** 																																	****/
+/****                                                                   ****/
+/****               # NO NEED TO EDIT BELOW THIS POINT #                ****/
+/****                                                                   ****/
 /***************************************************************************/
 
 
 
 
 /***************************************************************************/
-/* "GET" Subroutines																											 */
-/*		 --These routines serve as the collection mechanism. They get data	 */
-/*			 both from the config file and the data source (text file or mysql */
-/*			 database) for use by the "PRINT" subroutines farther below.			 */
+/* "GET" Subroutines                                                       */
+/*  --These routines serve as the collection mechanism. They get data      */
+/*    both from the config file and the data source (text file or mysql    */
+/*    database) for use by the "PRINT" subroutines farther below.          */
 /***************************************************************************/
 
 /*-------------------------------------------------------------------------*/
@@ -43,43 +36,57 @@ function setDefaultValues()
 		global $prefs;
 		global $params;
 			
-		$prefs["LIST_TEMPLATE_FILE"]					= "/etc/hlmaps/list_template.html";
-		$prefs["SINGLE_TEMPLATE_FILE"]				= "/etc/hlmaps/single_template.html";
+		$prefs["LIST_TEMPLATE_FILE"]     = "/etc/hlmaps/list_template.html";
+		$prefs["SINGLE_TEMPLATE_FILE"]	 = "/etc/hlmaps/single_template.html";
 		
-		$prefs["MAP_EXTENSION"] 							= "bsp";
-		$prefs["DOWNLOAD_EXT"]								= "zip";
+		$prefs["MAP_EXTENSION"]          = "bsp";
+		$prefs["DOWNLOAD_EXT"]           = "zip";
 		
-		$prefs["SERVER"]											= "127.0.0.1";
-		$prefs["PORT"]												= "27015";
-		$prefs["PASS"]												= "";
+		$prefs["SERVER"]                 = "127.0.0.1";
+		$prefs["PORT"]                   = "27015";
+		$prefs["PASS"]                   = "";
 
-		$prefs["QSTAT_EXEC"]									= "/etc/qstat/sqtat";
+		$prefs["QSTAT_EXEC"]             = "/etc/qstat/sqtat";
 
 
-		$prefs["DEFAULT_MAPS_PER_PAGE"] 			= "20";
+		$prefs["DEFAULT_MAPS_PER_PAGE"]  = "20";
 
-		$prefs["DATA_LOCATION"] 							= "/etc/hlmaps/hlmaps.data";
+		$prefs["DATA_LOCATION"]          = "/etc/hlmaps/hlmaps.data";
 		
-		$prefs["MYSQL_SERVER"]								= "localhost";
-		$prefs["MYSQL_DATABASE"]							= "HLmaps";
-		$prefs["MYSQL_USER"]									= "HLmaps";
-		$prefs["MYSQL_PASSWORD"]							= "HLmaps";
-		$prefs["MYSQL_TABLE"] 								= "maps";
-		$prefs["MYSQL_MAPNAME_FIELD"] 				= "map";
-		$prefs["MYSQL_IMAGEURL_FIELD"]				= "imageurl";
-		$prefs["MYSQL_DOWNLOAD_FIELD"]				= "downloadurl";
-		$prefs["MYSQL_TEXTFILE_FIELD"]				= "textfile";
-		$prefs["MYSQL_POPULARITY_FIELD"]			= "popularity";
-		$prefs["MYSQL_MAPCYCLE_FIELD"]				= "mapcycle";
-		$prefs["MYSQL_SIZE_FIELD"]						= "size";
-		$prefs["MYSQL_MODDATE_FIELD"] 				= "moddate";
+		// Don't overwrite these values if they were supplied in hlmaps.php 
+		if(!isset($prefs["MYSQL_SERVER"]))
+			$prefs["MYSQL_SERVER"]       = "localhost";
+		if(!isset($prefs["MYSQL_DATABASE"])) 
+			$prefs["MYSQL_DATABASE"]     = "HLmaps";
+		if(!isset($prefs["MYSQL_USER"])) 
+			$prefs["MYSQL_USER"]         = "HLmaps";
+		if(!isset($prefs["MYSQL_PASSWORD"])) 
+			$prefs["MYSQL_PASSWORD"]     = "HLmaps";
+			
+		$prefs["MYSQL_TABLE"]            = "maps";
+		$prefs["MYSQL_MAPNAME_FIELD"]    = "map";
+		$prefs["MYSQL_IMAGEURL_FIELD"]   = "imageurl";
+		$prefs["MYSQL_DOWNLOAD_FIELD"]   = "downloadurl";
+		$prefs["MYSQL_TEXTFILE_FIELD"]   = "textfile";
+		$prefs["MYSQL_POPULARITY_FIELD"] = "popularity";
+		$prefs["MYSQL_MAPCYCLE_FIELD"]   = "mapcycle";
+		$prefs["MYSQL_SIZE_FIELD"]       = "size";
+		$prefs["MYSQL_MODDATE_FIELD"]    = "moddate";
 
-		$params["mode"] 										= "list";
-		$params["mapcount"] 								= $prefs["DEFAULT_MAPS_PER_PAGE"];
-		$params["page"] 										= "1";
-		$params["sort"] 										= "map";
-		$params["order"]										= "a";
-		$params["mapname"]									= ""; 			
+		// Don't overwrite these values if they were supplied in hlmaps.php 
+		if(!isset($prefs["MYSQL_PREFS_TABLE"]))
+			$prefs["MYSQL_PREFS_TABLE"]  = "prefs";
+		if(!isset($prefs["MYSQL_PREFS_VALFIELD"])) 
+			$prefs["MYSQL_PREFS_VALFIELD"] = "prefvalues";
+		if(!isset($prefs["MYSQL_PREFS_KEYFIELD"])) 
+			$prefs["MYSQL_PREFS_KEYFIELD"] = "prefkeys";
+
+		$params["mode"]                  = "list";
+		$params["mapcount"]              = $prefs["DEFAULT_MAPS_PER_PAGE"];
+		$params["page"]                  = "1";
+		$params["sort"]                  = "map";
+		$params["order"]                 = "a";
+		$params["mapname"]               = "";
 }
 
 /*-------------------------------------------------------------------------*/
@@ -90,7 +97,7 @@ function getPreferences()
  global $CONFIG_FILE;
  global $prefs;
 
- if($myText = file($CONFIG_FILE))  // the file opened okay
+ if($myText = @file($CONFIG_FILE))  // the file opened okay (suppress warnings if not)
  {
 	 while(list($index, $aryVal) = each($myText))  // take the next line from the file & put it in $aryVal
 	 {
@@ -100,10 +107,50 @@ function getPreferences()
 	 }
 	 return(true); // success
  }
- else // couldn't open the file
- {
-	 return(false); // could not open the config file
+ else // couldn't open the file-- try mysql server
+ {	 
+	 $mysql_port = "3306";
+	 $mysql_query = "SELECT * FROM " . $prefs["MYSQL_PREFS_TABLE"];
+	
+	 if($connection = mysql_connect($prefs["MYSQL_SERVER"] . ":" . $mysql_port, 
+									$prefs["MYSQL_USER"], $prefs["MYSQL_PASSWORD"]))
+	 {
+		 if(mysql_select_db( $prefs["MYSQL_DATABASE"], $connection) 
+										&& $result = mysql_query($mysql_query) )
+		 {
+			 while($result_row = mysql_fetch_assoc($result))
+			 {
+				 $tempKey = $result_row[$prefs["MYSQL_PREFS_KEYFIELD"]];
+				 $tempVal = $result_row[$prefs["MYSQL_PREFS_VALFIELD"]];
+				 
+				  // Protect our already set MySQL prefs from being overwritten 
+				  //   by those in the .cron's .conf file! 
+				 if( strcmp($tempKey, "MYSQL_SERVER") &&
+				     strcmp($tempKey, "MYSQL_USER") &&
+				     strcmp($tempKey, "MYSQL_PASSWORD") &&
+				     strcmp($tempKey, "MYSQL_DATABASE") &&
+				     strcmp($tempKey, "MYSQL_PREFS_TABLE") && 
+				     strcmp($tempKey, "MYSQL_PREFS_KEYFIELD") &&
+				     strcmp($tempKey, "MYSQL_PREFS_VALFIELD")    )
+				 {
+				   $prefs[$tempKey] = $tempVal;
+				 }
+			 }
+		 }
+		 else
+		 {
+			 return(false);
+		 }
+		 mysql_close();
+		 return(true);
+	 }
+	 else
+	 {
+		 return(false);
+	 }
+	 //return(false); // could not open the config file
  }
+ 		print("getPreferences() couldn't open a config file, OR connect to the mysql database!<br>\n");
 }
 
 /*-------------------------------------------------------------------------*/
@@ -111,19 +158,22 @@ function getParameters()
 // Reads from the query string passed to hlmaps.php in the URL and stores the 
 //	 values in the $params array for use in determining the following
 //	 traits: 
-//			--'mode' = [non-existant] || 'list' || 'single'
+//			--'mode' = [non-existent] || 'list' || 'single'
+//          --'search' = [non-existent] || [search string]
 //			--'map' = ["short name" of any map] (this field is *required* if mode=single)
-//			--'mapcount'= [non-existant] || [a digit]
-//			--'page' = [non-existant] || [a digit less than: number of maps divided by mapcount]
-//			--'sort' = [non-existant] || 'map' || 'image' || 'popularity' 
+//			--'mapcount'= [non-existent] || [a digit]
+//			--'page' = [non-existent] || [a digit less than: number of maps divided by mapcount]
+//			--'sort' = [non-existent] || 'map' || 'image' || 'popularity'
 //									|| 'mapcycle' || 'size' || 'moddate' || 'download'
-//			--'order' = [non-existant] || 'a' || 'd'
+//			--'order' = [non-existent] || 'a' || 'd'
 //
 // I.e.-- The URL "hlmaps.php?mode=list&page=1&mapcount=25&sort=map&order=a"
 //					 will result in a list view of page 1 with the first 25 maps on
 //					 it, sorted in ascending order by map name.
 //				The URL "hlmaps.php?mode=single&map=de_dust" will result in a 
 //					 page detailing the map named "de_dust".
+//              The URL "hlmaps.php?search=de_" will result in a listing containing
+//                   all maps that contain "de_".
 {
  global $params;
 
@@ -131,6 +181,7 @@ function getParameters()
  // 	webserver. Each of these represent a variable passed to the script 
  // 	as part of a query string in the URL used to access the page.
  global $mode;
+ global $search;
  global $mapcount;
  global $page;
  global $sort;
@@ -138,13 +189,14 @@ function getParameters()
  global $map;
  
  // Make sure the query string contained the variable before trying to set it.
- if(isset($mode)){		 $params["mode"] = $mode; 				}
+ if(isset($mode)){     $params["mode"] = $mode;         }
+ if(isset($search)){   $params["search"] = $search;     }
  if(isset($mapcount)){ $params["mapcount"] = $mapcount; }
- if(isset($page)){		 $params["page"] = $page; 				}
- if(isset($sort)){		 $params["sort"] = $sort; 				}
- if(isset($order)){ 	 $params["order"] = $order; 			}
- if(isset($map)){  $params["map"] = $map; 		// If a map name is set,
-											 $params["mode"] = "single";			} //	auto set to single view/
+ if(isset($page)){     $params["page"] = $page;         }
+ if(isset($sort)){     $params["sort"] = $sort;         }
+ if(isset($order)){    $params["order"] = $order;       }
+ if(isset($map)){      $params["map"] = $map;             // If a map name is set,
+                       $params["mode"] = "single";      } //   auto set to single view.
 }
 
 /*-------------------------------------------------------------------------*/
@@ -163,8 +215,8 @@ function getMapDetails_text()
  {
 	 $map = new mapclass;
 	 while(list($map->map, $map->textfile, $map->downloadurl, $map->imageurl, 
-							$map->popularity, $map->mapcycle, $map->size, $map->moddate) 
-																											= fgetcsv($data, 200))
+                $map->popularity, $map->mapcycle, $map->size, $map->moddate)
+                                                         = fgetcsv($data, 200))
 	 {
 		 array_push($allMaps, $map);
 		 $numOfMaps++;
@@ -194,10 +246,10 @@ function getMapDetails_mysql()
  $tempMap = new mapclass;
 
  if($connection = mysql_connect($prefs["MYSQL_SERVER"] . ":" . $mysql_port, 
-													$prefs["MYSQL_USER"], $prefs["MYSQL_PASSWORD"]))
+                                $prefs["MYSQL_USER"], $prefs["MYSQL_PASSWORD"]))
  {
 	 if(mysql_select_db($prefs["MYSQL_DATABASE"], $connection) 
-													 && $result = mysql_query($mysql_query))
+        && $result = mysql_query($mysql_query))
 	 {
 		 while($result_row = mysql_fetch_assoc($result))
 		 {
@@ -263,9 +315,9 @@ Raw qstat data formats:
  // Leave the following variables out of the preferences-- we don't want
  // 	end users messing around with these-- only developers.
  $QSTAT_OPTIONS = " -P -R -nh -raw "; // show Player data, Server rules, 
-																			//	 No Header line, all in RAW format.
- $QSTAT_RAWDELIM = ","; 							// Delimits data fields in the raw output.
- $QSTAT_SERVERTYPE = "hls"; 					// Tells qstat this is a Half-Life server.
+                                      // No Header line, all in RAW format.
+ $QSTAT_RAWDELIM = ",";               // Delimits data fields in the raw output.
+ $QSTAT_SERVERTYPE = "hls";           // Tells qstat this is a Half-Life server.
  
  // Compile the command line to call qstat
  $command_line = $prefs["QSTAT_EXEC"] . $QSTAT_OPTIONS . $QSTAT_RAWDELIM 
@@ -301,7 +353,7 @@ Raw qstat data formats:
 		 $serverRules[$rule] = $value;
 	 }
 	 
-	 // Take all elements after servr info as player listings
+	 // Take all elements after server info as player listings
 	 $players = array_splice($command_output, 2);
 	 $thisPlayer = new playerClass;
 	
@@ -321,8 +373,8 @@ Raw qstat data formats:
 	 return(false);
  }
 		 
- /* // DEBUG OUTPUT *
- print("\n<br> Command used line is: " . $command_line);
+ //#*#* DEBUG OUTPUT *
+ /*print("\n<br> Command used line is: " . $command_line);
  print("\n<br> Return value from qstat is: " . $return_value);
  print("\n<br> Command output from qstat is: ");
  print_r($command_output);
@@ -340,14 +392,14 @@ Raw qstat data formats:
 }
 
 /***************************************************************************/
-/* "OTHER" Subroutines																										 */
-/*		 --These routines are neither GET or PRINT procedures, they provide  */
-/*			 support for both of these groups.																 */
+/* "OTHER" Subroutines                                                     */
+/* --These routines are neither GET or PRINT procedures, they provide      */
+/*   support for both of these groups.                                     */
 /***************************************************************************/
 
 /*-------------------------------------------------------------------------*/
 function printAllVars()
-// debug function to "watch" most of the values used in the script
+//#*#* DEBUG function to "watch" most of the values used in the script
 {
 	global $prefs;
 	global $params;
@@ -375,8 +427,8 @@ function printAllVars()
 	while(list($k, $temp) = each($allMaps))
 	{
 		print("\"" . $k . "\" = " . $temp->map . ", " . $temp->imageurl . ", "
-					 . $temp->downloadurl . ", " . $temp->textfile . ", " . $temp->popularity . ", " 
-					 . $temp->mapcycle . ", " . $temp->size . ", " . $temp->moddate . ", " . "<br>\n");
+              . $temp->downloadurl . ", " . $temp->textfile . ", " . $temp->popularity . ", "
+              . $temp->mapcycle . ", " . $temp->size . ", " . $temp->moddate . ", " . "<br>\n");
 	}
 	
 	// print displayed maps indices
@@ -467,8 +519,8 @@ function mapSort($a, $b)
 					 $result = compare($a->moddate, $b->moddate); 
 					 break; 	 
 					 
-		case "download": 
-					 $result = strnatcasecmp($a->downloadurl, $b->downloadurl); 
+		case "download":
+					 $result = strnatcasecmp($a->downloadurl, $b->downloadurl);
 					 break; 	 
 					 
 		case "map": // map IS the default case, so continue on down...
@@ -486,6 +538,33 @@ function mapSort($a, $b)
 }
 
 /*-------------------------------------------------------------------------*/
+function filterMapsBySearch($mapArray, $searchStr)
+// Searches $mapArray for elements that have a map name containing 
+//   $searchStr. Returns an array stripped of elements that do not match
+//   the criteria.
+{
+  global $numOfMaps;
+  
+  $filteredArray = array();
+  $numOfMaps = 0;
+  
+  while( list($k, $v) = each($mapArray) )
+  {
+    //echo "$k";  //#*#* DEBUG
+  	if( strstr($v->map, $searchStr) )
+  	{
+      //echo " found match";  //#*#* DEBUG
+  		$numOfMaps++;
+  	  $filteredArray[] = $v;
+    }
+    //echo ", ";  //#*#* DEBUG
+  }
+
+  return $filteredArray;
+}
+
+
+/*-------------------------------------------------------------------------*/
 function populateMapsForPage()
 // Grabs only the map records we need for the current display mode and 
 //	 stores them in an array of index references for use by the 
@@ -493,14 +572,42 @@ function populateMapsForPage()
 {
 	global $params;
 	global $allMaps;
+	global $filteredMaps;
 	global $displayedMaps;
 	global $numOfMaps;
 	
 	reset($allMaps);	// make sure we're at the start of the array
-	if($params["mode"] == "single")  // grab index of map we want to display
+	
+  
+  // Search function section
+  if(isset($params["search"]))  // A search string is present...
+  {
+    //echo " calling search filter ";  //#*#* DEBUG
+    $filteredMaps = filterMapsBySearch($allMaps, $params["search"]);  // ..so remove anything that doesn't match
+    if(count($filteredMaps) == 1)
+      $params["mode"] = "single";
+  }
+  else  // No search string, just pass $allMaps along.
+  {
+    //echo "no search filter";  //#*#* DEBUG
+    $filteredMaps = $allMaps;
+  }
+
+  //#*#* DEBUG
+  /*print(" printing found maps ");
+  while( list($k, $v) = each($filteredMaps) )
+  {
+    print($v->map . "<br />\n");
+  } */
+
+
+  // Generate a list of indices (one or multiple)
+  if($params["mode"] == "single")  // grab index of map we want to display
 	{
+    //echo " in single function ";  //#*#* DEBUG
 		$tempMap = new mapclass;
-		while(list($i, $tempMap) = each($allMaps))
+		
+		while(list($i, $tempMap) = each($filteredMaps))
 		{
 			if($tempMap->map == $params["map"])
 			{
@@ -512,7 +619,8 @@ function populateMapsForPage()
 	}
 	else	// determine criteria and make a list of indices
 	{
-		usort($allMaps, "mapSort");  // sort the maps by the url parameter "sort"
+    //echo " in list function ";  //#*#* DEBUG
+		usort($filteredMaps, "mapSort");  // sort the maps by the url parameter "sort"
 		
 		$start = ($params["page"] - 1) * $params["mapcount"];  // figure the beginning index for this page of maps
 		$end = $params["page"] * $params["mapcount"];  // figure the ending index
@@ -549,11 +657,11 @@ function popNextMap()
 //	 displayed.
 {
 	global $thisMap;
-	global $allMaps;
+	global $filteredMaps;
 	global $displayedMaps;
 	
 	// suppress warnings from the array and return zero instead
-	if($thisMap = @$allMaps[array_shift($displayedMaps)])
+	if($thisMap = @$filteredMaps[array_shift($displayedMaps)])
 	{ 
 		return(true); 
 	}
@@ -581,10 +689,10 @@ function report_error($file, $line, $message)
 
 
 /***************************************************************************/
-/* "PRINT" Subroutines																										 */
-/*		 --These routines can be called from an HTML template page. Comments */
-/*			 on output format and usage are included below each function's		 */
-/*			 declaration. 																										 */
+/* "PRINT" Subroutines                                                     */
+/* --These routines can be called from an HTML template page. Comments     */
+/*   on output format and usage are included below each function's         */
+/*   declaration.                                                          */
 /***************************************************************************/
 
 /*-------------------------------------------------------------------------*/
@@ -614,19 +722,17 @@ function printCredits()
 	{
 		$printed = true;
 		print("Generated by <a class=creditsLinkClass href=\"" . $HOME_PAGE 
-					. "\"><b>" . basename($PACKAGE_NAME) . "</b></a> " . $VERSION 
-					. "<br>" . "PHP version by <a class=creditsLinkClass href=\"" 
-					. $AUTHOR_EMAIL . "\">" . $AUTHOR_NAME . "</a>" 	 );
-				
-					//. " and <a href=\"mailto:beporter@users.sourceforge.net\">B Porter</a>" 	);
+              . "\"><b>" . basename($PACKAGE_NAME) . "</b></a> " . $VERSION
+              . "<br>" . "PHP version by <a class=creditsLinkClass href=\""
+              . $AUTHOR_EMAIL . "\">" . $AUTHOR_NAME . "</a>" 	 );
 	}
 }
-	
+
 	
 /*-------------------------------------------------------------------------*/
 function printMapsPerPageWidget($prompt = "Maps per page: ")
 // Prints an HTML form that allows that user to select how many maps
-//	 to display per page. The fucntion accepts an option argument
+//	 to display per page. The function accepts an option argument
 //	 for the text to display in front of the widget describing it's
 //	 function. The default (if no string is passed) is "Maps per page: "
 //		 ...good luck understanding the print()! (It was created in GoLive
@@ -688,20 +794,29 @@ function printFullOptionsForm()  /*** DEPRECIATED ***/
 }
 	
 /*-------------------------------------------------------------------------*/
-function printSearchForm($prompt = "Enter a map name")/*** UNIMPLEMENTED ***/
+function printSearchForm($prompt = "Enter a map name")
 // This function will eventually allow a user to search for a map. On an
 //	 exact match, a single map page will be displayed. If thee are no exact
 //	 matchs, the closest fits from those maps on the server will be 
 //	 displayed in a list view.
 {
 	global $prefs;
+	global $params;
 	global $SCRIPT_NAME;
 
 	print("<form name=\"Search\" action=" . $SCRIPT_NAME
 				. " method=\"get\" enctype=\"application/x-www-form-urlencoded\">\n"
-				. "<input type=\"text\" name=\"search\" size=\"24\"" 
-				. " maxlength=\"60\" value=" . $prompt . ">\n"
-				. "<input type=\"submit\" value=\"Search\">\n</form>");
+				. "<input type=\"text\" name=\"search\" size=\"24\""
+				. " maxlength=\"60\" value=\"");
+  
+//  if(isset($params["search"]))
+  if(TRUE)
+    print($params["search"]);
+  else
+    print($prompt);
+
+  print("\">\n" . "<input type=\"submit\" value=\"Search\">\n" .
+        "<input type=\"reset\" value=\"Clear\">\n" . "</form>");
 }
 
 /*-------------------------------------------------------------------------*/
@@ -809,7 +924,7 @@ function printListHeading($sortType, $prompt)
 function printListHeading_name($prompt = "Name")
 // Prints an HTML hyperlink that will sort the map list by name when clicked. 
 //	 The argument become the text of the hyperlink, and is optional. The 
-//	 defualt value will be used if none is supplied when calling the function.
+//	 default value will be used if none is supplied when calling the function.
 {
 	print(printListHeading("map", $prompt));
 }
@@ -872,22 +987,22 @@ function printThisMap_Name($currently_in_play = "Map currently in play: ")
 	if($params["mode"] == "list") // then link to a single map page
 	{
 		print("<a href=\"" . $SCRIPT_NAME . "?mode=single&map=" . $thisMap->map 
-																			 . "\">" . $thisMap->map . "</a>");
+	          . "\">" . $thisMap->map . "</a>");
 	}
 	else // then link to a list view
 	{
 		print("<a href=\"" . $SCRIPT_NAME . "?mode=list&page=" . $params["page"] 
-																	. "&mapcount=" . $params["mapcount"] 
-																			. "&sort=" . $params["sort"] 
-																		 . "&order=" . $params["order"] . "\">"
-																								 . $thisMap->map . "</a>");
+              . "&mapcount=" . $params["mapcount"] 
+              . "&sort=" . $params["sort"]
+              . "&order=" . $params["order"] . "\">"
+              . $thisMap->map . "</a>");
 	}
 	
 	if(@$serverInfo["map"] == $thisMap->map)
 	{
 		print("<br><a href=\"" . $prefs["REALTIME_STATUS_URL"] . "\">" 
-					. $currently_in_play . "(" . $serverInfo["current"] . "/" 
-					. $serverInfo["max"] . ")</a>");
+              . $currently_in_play . "(" . $serverInfo["current"] . "/"
+              . $serverInfo["max"] . ")</a>");
 	}
 }
 
@@ -909,14 +1024,14 @@ function printThisMap_Image($prompt = "No image available")
 	if($params["mode"] == "list") // then link to a single map page
 	{
 		print("<a href=\"" . $SCRIPT_NAME . "?mode=single&map=" 
-																						. $thisMap->map . "\">");
+              . $thisMap->map . "\">");
 	}
 	else // then link to a list view
 	{
 		print("<a href=\"" . $SCRIPT_NAME . "?mode=list&page=" . $params["page"] 
-																	. "&mapcount=" . $params["mapcount"] 
-																			. "&sort=" . $params["sort"] 
-																		 . "&order=" . $params["order"] . "\">");
+              . "&mapcount=" . $params["mapcount"]
+              . "&sort=" . $params["sort"]
+              . "&order=" . $params["order"] . "\">");
 	}
 	
 	if($thisMap->imageurl == "#na#") //then no image is available
@@ -933,7 +1048,7 @@ function printThisMap_Image($prompt = "No image available")
 	else // then there is a vaild image available, so use it
 	{
 		print("<img width=212 height=160 border=0 src=\"" . $thisMap->imageurl 
-															. "\" alt=\"" . $thisMap->map . "\"></a>");
+              . "\" alt=\"" . $thisMap->map . "\"></a>");
 	}
 }
 
@@ -963,8 +1078,8 @@ function printThisMap_Textfile($prompt = "No description available")
 
 /*-------------------------------------------------------------------------*/
 function printThisMap_Popularity($prompt_prefix= "Played ", 
-																 $prompt_suffix = " times", 
-																 $prompt_neverPlayed = "Never played")
+                                 $prompt_suffix = " times",
+                                 $prompt_neverPlayed = "Never played")
 // Prints how many times the map has been played. Uses the prefix and suffix
 //	 passed values to "cap" the output. If the map has never been played, the 
 //	 $prompt_neverPlayed value is displayed. All or none of the variables must 
@@ -983,7 +1098,7 @@ function printThisMap_Popularity($prompt_prefix= "Played ",
 
 /*-------------------------------------------------------------------------*/
 function printThisMap_Mapcycle($prompt_notInCycle = "Not in mapcycle", 
-															 $prompt_singleView_suffix = " in map rotation")
+                               $prompt_singleView_suffix = " in map rotation")
 // Prints the map's position in the mapcycle file. If the map is not in
 //	 the active rotation, the $prompt_noInCycle value is used. If the page
 //	 page to be rendered will be a single map view, $prompt_singleView_suffix
@@ -1024,7 +1139,7 @@ function printThisMap_ModDate($prompt = "Last modified on ")
 
 /*-------------------------------------------------------------------------*/
 function printThisMap_Download($prompt_download = "Download map", 
-															 $prompt_notAvailable = "Not available")
+                               $prompt_notAvailable = "Not available")
 // Prints a url to the downloadable file for this map, if available, using
 //	 the $prompt_download as the text for the hyperlink. If a download is 
 //	 not available, the function prints the $prompt_notAvailable variable

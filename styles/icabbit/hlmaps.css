@@ -1,24 +1,70 @@
 /*#########################################################################*/
-/*# hlmaps.css																														#*/
-/*#  - "hlstats" stylesheet for hlmaps HTML templates 										#*/
+/*# hlmaps.css (icabbit)                                                  #*/
+/*#  - The "csserverstat" stylesheet for hlmaps HTML templates						#*/
 /*#  - Copyright Brian Porter 																						#*/
 /*#  - Distributed under the GPL terms - see docs for info								#*/
 /*#  - http://hlmaps.sourceforge.net																			#*/
 /*# 																																			#*/
 /*#########################################################################*/
 
-body	
+body		
 { 
-	leftmargin: 2;
-	rightmargin: 2;
-	topmargin: 0;
-	bottommargin: 0;
-	marginwidth: 2;
-	marginheight: 0;
-	background-color: #0c1d40; 
-	color: #eee; 
-	font-family: Verdana, Arial, sans-serif;
-	font-size: 12pt;
+	background-color: #404040; 
+	color: "#f1f1f1";
+	padding: 0 0 0 0; 
+	margin: 2 2 2 2; 
+	font-family=Verdana, Arial, Helvetica; 
+	font-size=10pt;
+}
+
+/*This section fixes the "blank link" look that
+	happens when using the csserverstat style*/
+a:link.creditsLinkClass
+{
+	text-decoration: none; 
+	color: #909090;
+
+}
+a:visited.creditsLinkClass
+{
+	text-decoration: none; 
+	color: #909090;
+
+}
+a:active.creditsLinkClass 	
+{ 
+	text-decoration: none; 
+	color: #E0E0E0;
+}
+a:hover.creditsLinkClass	 
+{ 
+	text-decoration: none; 
+	color: #E0E0E0;
+}
+/*End "blank link" fix*/
+
+a:link		
+{ 
+	text-decoration: none; 
+	color: #404040;
+}
+
+a:visited	
+{ 
+	text-decoration: none; 
+	color: #404040; 
+}
+
+a:active		
+{ 
+	text-decoration: none; 
+	color: #E0E0E0;
+}
+
+a:hover		
+{ 
+	text-decoration: none; 
+	color: #E0E0E0; 
 }
 
 pre
@@ -27,45 +73,18 @@ pre
 	font-size: 8pt;
 }
 
-a:link 
-{ 
-	color: #f90; 
-	text-decoration: none; 
-}
-
-a:vlink 
-{ 
-	color: #ff9000; 
-	text-decoration: none; 
-}
-
-a:active 
-{ 
-	color: #fb0; 
-	text-decoration: none; 
-}
-
-a:hover 
-{ 
-	color: #f0c000; 
-	text-decoration: none; 
-}
-
-a 
-{ 
-	color: #ff9000; 
-	text-decoration: none; 
-}
 
 table
 {
 	/*width: 100%;*/
-	background-color: #001B73;
-	border-color: #001B73;
-	border-width: 0;
+	background-color: #707070;
+	border-style: solid none solid none; 
+	border-width: 3; 
+	border-color: #606060;
 	cellpadding: 1;
 	cellspacing: 1;
 	empty-cells: show;
+	color: #000000;
 }
 
 tr
@@ -74,7 +93,7 @@ tr
 
 th
 {
-	background-color: #002E8A;
+	background-color: #607080;
 	font-size: 9pt;
 	font-weight: bold;
 	text-align: center;
@@ -83,7 +102,7 @@ th
 
 td
 {
-	background-color: #15154d;
+	background-color: #808080;
 	font-size: 8pt;
 	text-align: center;
 	vertical-align: center;

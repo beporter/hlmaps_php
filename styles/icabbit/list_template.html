@@ -1,0 +1,84 @@
+<!--/*#####################################################################*/
+/*# list_template.html (icabbit) 																		#*/
+/*#  - HTML template for map-list view mode 															#*/
+/*#  - Copyright Brian Porter 																						#*/
+/*#  - Distributed under the GPL terms - see docs for info								#*/
+/*#  - http://hlmaps.sourceforge.net																			#*/
+/*# 																																			#*/
+/*######################################################################*/-->
+
+<html lang="en-US">
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=ISO-8859-1">
+		<title>hlmaps</title>
+		<!-- <link rel="stylesheet" href="hlmaps.css"> <?/* ### THIS URL IS RELATIVE TO hlmaps.php ### */?> -->
+	</head>
+	<body>
+		<center>
+			<font class="fontTitle">[Wumpa] iCabbit Map List</font>
+			<p><font class="fontNews">Welcome to iCabbit's HLmaps listing. Click on a map image for detailed information. HLmaps is currently displaying <? printTotalMapCount(); ?> maps.</font></p>
+			<br>
+      <table border="0" cellpadding="2" cellspacing="2" bgcolor="000000">
+        <tr>
+          <td bgcolor="CCCCCC" valign=middle><font class="fontNews"><? printMapsPerPageWidget("Maps per page: "); ?></font></td>
+          <td bgcolor="CCCCCC" valign=center><font class="fontNews"><? printSearchForm("Enter search text"); ?></font></td>
+        </tr>
+        <tr>
+          <td bgcolor="CCCCCC" colspan=2 align=center><font class="fontNews">Page: <? printPageSelectors(); ?></font></td>
+        </tr>
+			</table>
+			<table border="0" cellpadding="2" cellspacing="2" bgcolor="000000">
+				<caption><p><font class="fontNormal">Sort by:</font></p></caption>
+				<tr>
+					<td bgcolor="CCCCCC"><? printListHeading_name("Name"); ?></td>
+					<td bgcolor="CCCCCC"><? printListHeading_image("Image"); ?></td>
+					<td bgcolor="CCCCCC"><? printListHeading_popularity("Popularity"); ?></td>
+					<td bgcolor="CCCCCC"><? printListHeading_size("Map Size"); ?></td>
+					<td bgcolor="CCCCCC"><? printListHeading_mapcycle("In mapcycle?"); ?></td>
+					<td bgcolor="CCCCCC"><? printListHeading_modDate("Mod Date"); ?></td>
+					<td bgcolor="CCCCCC"><? printListHeading_download("Download Available"); ?></td>
+				</tr>
+			</table>
+			<br>
+			<table cellpadding="2" cellspacing="2" border="0" bgcolor="000000">
+				<? while(popNextMap()){  ?>
+				<tr>
+					<td bgcolor="CCCCCC"><? printThisMap_image("./csserverstat-1.06/images/cs_default.jpg"); ?></td>
+					<?/* ### THIS URL IS RELATIVE TO hlmaps.php ### */?>
+					<td bgcolor="CCCCCC">
+						<table border="0" cellpadding="2" cellspacing="2" font class="fontNews">
+							<tr>
+								<td align="right" nowrap>Name:</td>
+								<td><? printThisMap_name("Map now in play: "); ?></td>
+							</tr>
+							<tr>
+								<td align="right" nowrap>Popularity:</td>
+								<td><? printThisMap_popularity("Played ", " times", "Never played"); ?></td>
+							</tr>
+							<tr>
+								<td align="right" nowrap>Position in Mapcycle:</td>
+								<td><? printThisMap_mapcycle("Not in mapcycle"); ?></td>
+							</tr>
+							<tr>
+								<td align="right" nowrap>Size:</td>
+								<td><? printThisMap_size(); ?></td>
+							</tr>
+							<tr>
+								<td align="right" nowrap>Last Modified Date:</td>
+								<td><? printThisMap_modDate("Last modified on "); ?></td>
+							</tr>
+							<tr>
+								<td align="right" nowrap>Download Available?:</td>
+								<td><? printThisMap_download("Download map", "Not available"); ?></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<? }	/* end the map printing loop */ ?>
+						
+				</table>
+				<? printPageSelectors(); ?>
+				<pre><? printCredits(); ?></pre>
+		 </center>
+	 </body>
+</html>

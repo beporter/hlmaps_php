@@ -20,7 +20,6 @@ LIST_TEMPLATE_FILE          = list_template.html
 SINGLE_TEMPLATE_FILE        = single_template.html
 
 
-
 #-----------------------------------------------------------------------------
 # Half-Life server constants - remember trailing "/" or "\" on DIRs and URLs!
 SERVER_BASE_DIR             = /usr/bin/half-life/cstrike/
@@ -98,5 +97,9 @@ MYSQL_POPULARITY_FIELD      = popularity
 MYSQL_MAPCYCLE_FIELD        = mapcycle
 MYSQL_SIZE_FIELD            = size
 MYSQL_MODDATE_FIELD         = moddate
+
+MYSQL_PREFS_TABLE           = prefs
+MYSQL_PREFS_KEYFIELD        = prefkeys
+MYSQL_PREFS_VALFIELD        = prefvalues
 
 ###############################################################################

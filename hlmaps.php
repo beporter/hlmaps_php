@@ -34,7 +34,25 @@
 /* CHANGE THIS TO POINT TO YOUR "hlmaps.inc"                               */
 // Absolute filesystem path to include file
 //   i.e.: "/etc/hlmaps/hlmaps.inc" or "C:/hlmaps/hlmaps.inc"
-$INCLUDE_FILE = "C:/hlmaps-php/php/hlmaps.inc";
+$INCLUDE_FILE = "hlmaps.inc";
+
+/***************************************************************************/
+/* CHANGE THIS TO POINT TO YOUR "hlmaps.conf"                              */
+// Absolute filesystem path to config file
+//	 i.e.: "/etc/hlmaps/hlmaps.conf" or "C:/hlmaps/hlmaps.conf"
+$CONFIG_FILE = "hlmaps.conf";
+
+
+// MySQL variables. Edit these if your game server and web server are on
+//   different machines. hlmaps.php will load it's config data from the
+//   mysql server instead of a local hlmaps.conf file.
+$prefs["MYSQL_SERVER"]          = "127.0.0.1";
+$prefs["MYSQL_USER"]            = "hlmaps";
+$prefs["MYSQL_PASSWORD"]        = "hlmaps";
+$prefs["MYSQL_DATABASE"]        = "hlmaps";
+$prefs["MYSQL_PREFS_TABLE"]     = "prefs";
+$prefs["MYSQL_PREFS_VALFIELD"]  = "prefvalues";
+$prefs["MYSQL_PREFS_KEYFIELD"]  = "prefkeys";
 
 
 
@@ -48,12 +66,12 @@ $INCLUDE_FILE = "C:/hlmaps-php/php/hlmaps.inc";
 /* Global Development Constants                                            */
 /***************************************************************************/
 // Development constants - please don't mess with these
-$VERSION             = "0.9, February 20, 2002";
+$VERSION             = "0.91, December 30, 2002";
 $AUTHOR_NAME         = "Brian Porter";
 $AUTHOR_EMAIL        = "beporter@users.sourceforge.net";
 $HOME_PAGE           = "http://hlmaps.sourceforge.net";
 //$SCRIPT_NAME         = $SCRIPT_NAME; // Auto-defined by PHP in global scope
-$PACKAGE_NAME        = "HLmaps_PHP"; // Use this for credits instead
+$PACKAGE_NAME        = "HLmaps_php"; // Use this for credits instead
 
 /***************************************************************************/
 /* Main                                                                    */
@@ -83,7 +101,7 @@ class playerClass
 require($INCLUDE_FILE);
 
 // Create an empty associative array to hold the preferences and parameters passed by URL
-$prefs = array();  
+//$prefs = array();  
 $params = array(); 
 
 // Create arrays to hold server info, rules, and players from live status
@@ -96,6 +114,9 @@ $playerList = array();
 $allMaps = array();
 $numOfMaps = 0;
 
+// Create an array to use if we're searching for a certain string in map names
+$filteredMaps = array();
+
 // We also need an array to hold the index values of maps from $allMaps we want
 //   to display on the current page based on viewing mode and sort order
 $displayedMaps = array();
@@ -103,12 +124,12 @@ $displayedMaps = array();
 // Lastly, a global map container used by the printThisMap_...() functions
 $thisMap = new mapclass;  
 
-
 // Set up the current environment
 setDefaultValues();
 getPreferences();
 getParameters();
 getRealtimeServerStatus();
+
 
 // Load all map data from the data source
 if($prefs["DATA_LOCATION"] === "mysql")
@@ -123,7 +144,7 @@ else
 // Grab only the records we need for displaying the current page
 populateMapsForPage();
 
-// Determine which template file we use based on the arguments passed 
+// Determine which template file we use based on the arguments passed
 //   in the URL and insert our template file here-- it does the rest 
 //   of the work for us.
 switch($params["mode"])
@@ -137,4 +158,5 @@ switch($params["mode"])
        break;
 }
 printCredits();  // If we haven't already, print credit information.
-/*#######################################################################*/?>
+
+/*######################################################################*/ ?>
