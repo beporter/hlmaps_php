@@ -1,12 +1,12 @@
 ###############################################################################
 # hlmaps.conf                                                                 #
 #  - The configuration file for HLmaps                                        #
-#  - Copyright Scott McCrory and Brian Porter                                 #
+#  - Copyright Scott McCrory                                                  #
 #  - Distributed under the GPL terms - see docs for info                      #
 #  - http://hlmaps.sourceforge.net                                            #
 #                                                                             #
 ###############################################################################
-# 
+# CVS $Id$
 ###############################################################################
 #
 # **   MODIFY THESE FOR YOUR SYSTEM    **

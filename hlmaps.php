@@ -6,6 +6,8 @@
 /*#  - http://hlmaps.sourceforge.net                                      #*/
 /*#                                                                       #*/
 /*#########################################################################*/
+/*# CVS $Id$
+/*#########################################################################*/
 //#
 //#    HLmaps-php
 //#    Copyright (C) 2002 Scott McCrory and Brian Porter
@@ -46,7 +48,7 @@ $INCLUDE_FILE = "C:/hlmaps-php/php/hlmaps.inc";
 /* Global Development Constants                                            */
 /***************************************************************************/
 // Development constants - please don't mess with these
-$VERSION             = "2.0b1, February 20, 2002";
+$VERSION             = "0.9, February 20, 2002";
 $AUTHOR_NAME         = "Brian Porter";
 $AUTHOR_EMAIL        = "beporter@users.sourceforge.net";
 $HOME_PAGE           = "http://hlmaps.sourceforge.net";
