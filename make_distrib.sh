@@ -12,7 +12,7 @@
 # First refresh the docs in the HTML tree
 chown -R smccrory.smccrory *
 rm -rf ../hlmaps_php-release/*
-cp -f CHANGELOG CONTRIBUTING CONTRIBUTORS hlmaps.conf.distrib hlmaps.cron hlmaps.inc hlmaps.php INSTALL INSTALL.MySQL LICENSE make_distrib.sh README styles STYLES101 TODO ../hlmaps_php-release/
+cp -f CHANGELOG CONTRIBUTING CONTRIBUTORS hlmaps.conf.distrib hlmaps.cron hlmaps.inc hlmaps.php INSTALL INSTALL.MySQL LICENSE make_distrib.sh README styles STYLES101 TODO styles ../hlmaps_php-release/
 
 # Tar and gzip the release and html packages
 cd .. 
