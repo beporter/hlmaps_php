@@ -1,0 +1,51 @@
+/*#########################################################################*/
+/*# hlmaps.css (default)																									#*/
+/*#  - The default stylesheet for hlmaps HTML templates 									#*/
+/*#  - Copyright Brian Porter 																						#*/
+/*#  - Distributed under the GPL terms - see docs for info								#*/
+/*#  - http://hlmaps.sourceforge.net																			#*/
+/*# 																																			#*/
+/*#########################################################################*/
+
+/* Define very little and leave the rendering of links and tables mostly up
+	 to the user's browser. Won't look that pretty (or consistent) but is the 
+	 most straightforward and browser compatible route. */
+	 
+body
+{
+	background-color: #f0f8ff;
+}
+
+a:link
+{
+	color: #101999;
+}
+
+a:visited
+{
+	color: #205448;
+}
+
+table
+{
+	background-color: #f7f7f7;
+	border: solid;
+	border-color: #494949;
+	border-width: 1px;
+}
+
+/* Used for top row in the map list and the current page in the page 
+	 selectors. */
+th
+{
+	background-color: #66bbcc;
+}
+
+/* Used in all cells of every table. */
+td
+{
+	background-color: #aabbcc;
+	text-align: center;
+}
+
+

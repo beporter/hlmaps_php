@@ -1,0 +1,80 @@
+###############################################################################
+#                                                                             #
+# README - The first place to start when learning about HLmaps                #
+#        - Copyright Scott McCrory and Brian Porter as part of the HLmaps     #
+#          distribution                                                       #
+#        - Distributed under the GNU Public License - see docs for more info  #
+#        - http://hlmaps.sourceforge.net                                      #
+#                                                                             #
+###############################################################################
+# CVS $Id$
+###############################################################################
+
+    HLmaps
+    Copyright (C) 2002 Scott D. McCrory <smccrory@users.sourceforge.com> and
+                       Brian Porter     <beporter@users.sourceforge.net>
+    All Rights Reserved
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+------------------------------------------------------------------------------
+
+DESCRIPTION
+-----------
+HLmaps is a Perl script set for Linux, FreeBSD and WinNT Half-Life game 
+server admins written by Scott McCrory. The PHP release is written by Brian 
+Porter. It allows web site visitors to view all your loaded maps, screen shots, 
+download links for maps, and some file statistics in a highly customizable 
+output page. In the PHP version, HTML is used for output structure, and CSS is 
+used for style. See STYLES101 for more on this.
+
+HLmaps should be pretty safe to use, as Perl's "warn" and "taint" modes are 
+implemented(although NT ActiveState Perl users may need to remove the -T).
+Processing loads are not very noticable now that the package uses a scheduled job
+to parse the logs into an interrim file or optional MySQL database, and the
+run-time PHP script gets its info from this file/database when displaying the
+output to the user.
+
+REQUIRES
+--------
+  + Linux, FreeBSD or WinNT
+  + Perl 5.0+  (Ships with nearly every *nix distribution) or ActiveState's
+    Perl for WinNT)
+  + Web server supporting PHP 4+ (Apache and Microsoft IIS both support PHP)
+  + MySQL if you want to use a database as the interrim data store (optional)
+  + Half-Life Server software (well duh!)
+
+DOWNLOADING
+-----------
+Home page:
+      http://hlmaps.sourceforge.net
+
+INSTALLING
+----------
+Please read the INSTALL file in this package for installation and upgrade info.
+
+CONTRIBUTING
+------------
+If you're interested in contributing to HLmaps, by all means study this
+package and check out the home page at http://hlmaps.sourceforge.net where
+you'll find a link to the CVS tree, developer mailing lists, etc. I sure
+could use help with everything from bug fixes to additional map images to
+additional platform ports to documentation to optimizing code to
+adding features...!
+
+--
+Hope you enjoy!
+Scott and the HLmaps development team.
+

@@ -1,0 +1,60 @@
+<!--/*#####################################################################*/
+/*# list_template.html (csserverstat) 																		#*/
+/*#  - HTML template for map-list view mode 															#*/
+/*#  - Copyright Brian Porter 																						#*/
+/*#  - Distributed under the GPL terms - see docs for info								#*/
+/*#  - http://hlmaps.sourceforge.net																			#*/
+/*# 																																			#*/
+/*######################################################################*/-->
+
+<html lang="en-US">
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=ISO-8859-1">
+		<title>hlmaps</title>
+		<link rel="stylesheet" href="hlmaps.css"> <?/* ### THIS URL IS RELATIVE TO hlmaps.php ### */?>
+	</head>
+	<body>
+		<center>
+			<h2>HLmaps - list view</h2>
+			<h3>Click on column headings to sort</h3>
+			<p>Additional information can go here. Such as a <a class=creditsLinkClass href="/index.html">
+				 link back to your site's homepage</a>.</p>
+			<? printMapsPerPageWidget("Maps per page: "); /* print a selction box form to display different number of maps per page */ ?> 
+			<? printPageSelectors(); /* print table for switching pages */ ?><br>
+			<table>
+				<tr>
+					<th><? printListHeading_name("Name"); /* returns html link (printing the string passed to it) to sort asc/desc by map name */ ?></th>
+					<th><? printListHeading_image("Image"); /* link to sort by image or no image */ ?></th>
+					<th><? printListHeading_popularity("Popularity"); /* link to sort by times played */ ?></th>
+					<th><? printListHeading_mapcycle("In mapcycle?"); /* link to sort by mapcycle order */ ?></th>
+					<th><? printListHeading_size("Map Size"); /* link to sort by map file size */ ?></th>
+					<th><? printListHeading_modDate("Mod Date"); /* link to sort by map file modification date */ ?></th>
+					<th><? printListHeading_download("Download Available"); /* link to sort by download available or not */ ?></th> 					
+				</tr>
+		
+				<? while(popNextMap()){  /* cycles through all of the map listings to be shown according 
+																		to page number and sort order by populating the 'current map' 
+																		object with the next map record from the data source					*/ ?>
+				<tr>
+					<td><? printThisMap_name("Map now in play: ");	/* prints the 'current' map's name (as a link to single map view) */ ?></td>
+					<td><? printThisMap_image("images/cs_default.jpg");  /* prints the 'current' map's image (as a link to single map view) */	?></td> <?/* ### THIS URL IS RELATIVE TO hlmaps.php ### */?>
+					<td><? printThisMap_popularity("Played ", " times", "Never played");	/* prints the 'current' map's popularity */ ?></td>
+					<td><? printThisMap_mapcycle("Not in mapcycle");	/* prints the 'current' map's place in the mapcycle */ ?></td>
+					<td><? printThisMap_size();  /* prints the 'current' map's size */ ?></td>
+					<td><? printThisMap_modDate("Last modified on ");  /* prints the 'current' map's modification date */ ?></td>
+					<td><? printThisMap_download("Download map", "Not available");	/* prints the 'current' map's download link */ ?></td>
+				</tr>
+				<? }	/* end the map printing loop */ ?>
+						
+				</table>
+		
+				<br>
+				<b>This server hosts <? printTotalMapCount(); /* Displays total number of maps hosted on the server */ ?> maps total</b>
+				<br>
+				<br>
+				<? printPageSelectors(); /* print table for switching pages */ ?>
+				<pre><? printCredits(); /* Prints credit and contact information for hlmaps. 
+									 ###-THIS FUNCTION IS REQUIRED ON EVERY HLMAPS PAGE!-### */ ?></pre>
+		 </center>
+	 </body>
+</html>

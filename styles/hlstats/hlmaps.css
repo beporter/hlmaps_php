@@ -1,0 +1,111 @@
+/*#########################################################################*/
+/*# hlmaps.css																														#*/
+/*#  - "hlstats" stylesheet for hlmaps HTML templates 										#*/
+/*#  - Copyright Brian Porter 																						#*/
+/*#  - Distributed under the GPL terms - see docs for info								#*/
+/*#  - http://hlmaps.sourceforge.net																			#*/
+/*# 																																			#*/
+/*#########################################################################*/
+
+body	
+{ 
+	leftmargin: 2;
+	rightmargin: 2;
+	topmargin: 0;
+	bottommargin: 0;
+	marginwidth: 2;
+	marginheight: 0;
+	background-color: #0c1d40; 
+	color: #eee; 
+	font-family: Verdana, Arial, sans-serif;
+	font-size: 12pt;
+}
+
+pre
+{
+	font-family: Arial, sans-serif;
+	font-size: 8pt;
+}
+
+a:link 
+{ 
+	color: #f90; 
+	text-decoration: none; 
+}
+
+a:vlink 
+{ 
+	color: #ff9000; 
+	text-decoration: none; 
+}
+
+a:active 
+{ 
+	color: #fb0; 
+	text-decoration: none; 
+}
+
+a:hover 
+{ 
+	color: #f0c000; 
+	text-decoration: none; 
+}
+
+a 
+{ 
+	color: #ff9000; 
+	text-decoration: none; 
+}
+
+table
+{
+	/*width: 100%;*/
+	background-color: #001B73;
+	border-color: #001B73;
+	border-width: 0;
+	cellpadding: 1;
+	cellspacing: 1;
+	empty-cells: show;
+}
+
+tr
+{
+}
+
+th
+{
+	background-color: #002E8A;
+	font-size: 9pt;
+	font-weight: bold;
+	text-align: center;
+	vertical-align: baseline;
+}
+
+td
+{
+	background-color: #15154d;
+	font-size: 8pt;
+	text-align: center;
+	vertical-align: center;
+}
+
+.higlightedClass
+{
+	/*background-color: #ffffff;*/
+	font-style=oblique;
+}
+
+/* Used by the printMapsPerPageWidget() function */
+.mapsPerPageFormClass
+{
+	font-size=12pt;
+}
+
+/* Used by the printPageSelectors() function */
+.pageSelectorsClass
+{
+	font-weight=bold;
+	text-decoration=none;
+	font-size=12pt;
+}
+

@@ -1,0 +1,130 @@
+###############################################################################
+# CHANGELOG                                                                   #
+#  - List of changes HLmaps has undergone under each version                  #
+#  - Copyright Scott McCrory and Brian Porter as part of the HLmaps           #
+#    distribution                                                             #
+#  - Distributed under the GNU Public License - see docs for more info        #
+#  - http://hlmaps.sourceforge.net                                            #
+#                                                                             #
+###############################################################################
+# 
+###############################################################################
+
+---------------------------------------------
+- bugfix, + enhancement, * contrib, = RELEASE
+---------------------------------------------
+
+= 2.0 3/07/2002
+  = First release of PHP port based on Perl v1.1. All features currently
+    available in the Perl release are implemented in the PHP release.
+  + PHP release includes major enhancements in output customization over the 
+    Perl release. Uses HTML templates for structural formatting on the output 
+    page, and cascading stylesheets for visual styling. The .conf file is much
+    shorter as a result.
+  + PHP release now uses qstat for live server status.
+  * PHP release contributed by Brian Porter (beporter@users.sourceforge.net)
+
+= 1.1 03/27/2001
+  = This release is specifically to allow operation with hlds 1.1.0.6+ servers.
+  * Merged Michael Park's update of Rod May's kkrcon code to determine currently
+    running map from hlds 1.1.0.6+ servers (thanks Michael!)
+  - Changed hlmaps.conf.distrib file to search for "Loading map" instead of
+    "Spawning Server" for indication of map load in 1.1.0.6+ servers.
+
+= 1.0 10/23/2000
+  = I'm calling this 1.0 because it has all the features (and it looks like the
+    stability) of a 1.0 release.  Future work will most likely be aimed at bug
+    fixes and small enhancements.
+  + Integrated Rod May's kkrcon code to show which map is currently in play.
+    Also added integration with real-time stats programs like csserverstat.
+    The combination of these features means you can click on the map in play
+    and go to the real-time information for the server!
+  + Clicking on the single-map screen's map image will return the user to the
+    main maps list.
+  - Remarked out the "use DBI;" lines in hlmaps.pl and hlmaps.cron to quash
+    the error that non-DB users were getting.  If anyone knows how to properly
+    load DBI at runtime without warnings, please let me know.  As per the
+    INSTALL.MySQL file, DB users will now need to unremark these two lines.
+  - Cleaned up some code, comments and docs.
+
+= 0.95 09/24/2000
+  + Added optional MySQL support as the storage medium for the interrim data.
+    This should give others the ability to write applications which will use
+    the data collected by hlmaps.cron.  Go to it developers!
+  - Fixed bug where default maps/page wasn't being read (handled) correctly
+    from hlmaps.conf file.
+  - Improved resilience to mapcycle.txt files that have extra (DOS) characters
+    in them - thanks Ludwig Nussel for the regex!
+  - Fixed problem with number of pages calculation.  If the number of maps div
+    by the maps per page equaled an even number, we'd add a blank page to the
+    end.  Not anymore, thanks to Jon Adams!
+
+= 0.94 08/05/2000
+  * Thanks to Justin Harris, Matthew McClendon and Matt Chambers for many
+    ideas behind this release...
+  - Fixed a bug where the number of maps displayed was 1 less than the number
+    specified (i.e. 9 instead of 10).
+  - Set default values for many variables in case they're not specified in the
+    .conf file.  This can happen when a user forgets to update their .conf
+    after upgrading HLmaps and there are additional variables.
+  - Script was only reading the name of the first game session listed in each
+    log file when determining map popularity.  Now it should pick up multiple
+    map loads within a log file. - thanks Matthew McClendon!
+  + HLmaps now uses a cron script to gather information from the log files,
+    mapcycle, map directory, download directory and txt files.  This is to
+    greatly improve the run-time performance of HLmaps (many servers had over
+    10 meg of logs to parse for each web hit!) and to make it easier for the
+    future addition of MySQL support.  See the INSTALL file for details.
+  + Now printing nav bar below the map table in addition to the one above.
+  + Added {A} for ascending and {D} for descending sort order indication.
+  + You can now specify a "no maps available" image in place of the text
+    message using a hlmaps.conf variable.  This can be used to force all the
+    columns to be the same height.
+  + Added variable in .conf for built-in maps (these are ones which don't have
+    external .bsp files - they're integrated into the mod)
+  + Added a separate single-map view with the map.txt file, download link,
+    image, stats, etc.  This now serves as the jump-off point for downloads
+    instead of direct links from the main results table.
+  + Added drop-down widget to let user change number of maps displayed/page.
+  + Added documentation to the .conf file to make it clearer.
+
+= 0.93 07/25/2000
+  * Thanks to Martin Hömberg for many ideas behind this release...
+  + Confirmed NT portability - admins will just have to remove the "-T" on the
+    script's "shebang" line to make it work under ActiveState Perl.  Martin
+    gets big kudos for testing and offering solutions for this.
+  + Internationalized HLmaps output - use the .conf file to make it print the
+    output in your language.
+  + Map image now links to the download package if one exists.
+  + Added .conf option for different download extension in case you make your
+    maps downloads available in .arj, .arc, .gz, etc.
+  + Added color to table header row to indicate current sort order.
+  + Added indication of what position a map is in the mapcycle.
+  + Added ability to specify number of maps per page displayed, as well as the
+    paging navigation bar.  This should be great for servers with tons of
+    maps and 56k modem clients who don't want to wait for pages to load.
+
+= 0.92 07/22/2000
+  - Fixed problem where a DOS-edited mapcycle with carriage returns would
+    prevent HLmaps from understanding it correctly.  Should work fine now.
+  - Now only using Perl-internal dir and file access functions instead of the
+    kludgy "ls" that I was using.  Should make porting to NT easier.
+  + HLmaps now uses a separate /etc/hlmaps.conf file for more flexible editing
+    of preferences and easier script upgrades.  Note that users running mult-
+    iple instances of HLmaps on the same system will want to edit the script's
+    $CONF_FILE variables to point to seperate hlmaps.conf files.
+  + The INSTALL file was updated with the new procedures now that we have a
+    separate hlmaps.conf file.
+  + User can now sort by map modification date/time.
+  + Imported project into SourceForge's CVS repository.
+  + Again tested OK with Apache/mod_perl's "PerlRun" compatability mode.
+    This is now part of my standard testing procedures and is probably as far
+    as I'll ever get to true mod_perl unless someone want to help.
+
+= 0.91 07/21/2000
+  - Fixed problem where cat | grep could only handle up to 1500 line files
+    by using Perl internal file access -- Glen Muras.
+  + Tested OK with Apache/mod_perl's "PerlRun" compatability mode.
+
+= 0.90 07/20/2000 -- Scott (smccrory@users.syshealth.net)
+  First public release.

@@ -1,0 +1,50 @@
+###############################################################################
+# CONTRIBUTING                                                                #
+#  - How to help with the development of HLmaps                               #
+#  - Copyright Scott McCrory and Brian Porter as part of the HLmaps           #
+#    distribution                                                             #
+#  - Distributed under the GNU Public License - see docs for more info        #
+#  - http://hlmaps.sourceforge.net                                            #
+#                                                                             #
+###############################################################################
+# 
+###############################################################################
+
+IMAGE CONTRIBUTIONS
+-------------------
+    Probably the one thing that will help the most is map images. The 
+development team will never have time to keep up with all the new maps for 
+all the Half-Life mods out there and so we really could use your help. Please 
+note that hlmon.pl, hlds_ld.cgi and csserverstats script users will also 
+benefit from your contributions, so you're killing four birds with one stone!
+    To contribute map images, just take a good screen shot (F5 key for most
+people) at one of the most prominent (usually outdoor) place in the map.  Then,
+look in your half-life directory for a .BMP file and if necessary brighten it
+and increase the contrast, then change the image size to 212x160 and finally
+sharpen the image a bit. Save it to "mapname.jpg" and send it to me via email
+at smccrory@users.sourceforge.net (please zip up a batch if you have more than
+a few). Also, please make the image quality as good as can be reasonably
+expected to make it easy for visitors to identify a map by sight without going
+blind. If you don't want the hassle of tidying up the images but are still
+willing to grab map shots, then just let us know and we'll split up the job.
+
+CODE CONTRIBUTIONS
+------------------
+    If you just want to make suggestions about future versions of HLmaps, then
+please use the surveys at the project home page (see above). On the other
+hand, we're always appreciative of coding help. Take a look through the code 
+and talk to us about your intentions and if there's a fit, you can be added to 
+the developer list and you'll be able to use the CVS tree and other project 
+tools!
+
+STYLE CONTRIBUTIONS
+-------------------
+    If you come up with a some good templates for the PHP release of HLmaps, or
+an inventive implementation of them, please email Brian. It would always be 
+nice to package more styles with HLmaps. In particular, styles that match other
+Half-Life related web programs (like the CSserverStat and HLStats styles 
+included) would be appreciated.
+
+--
+Scott and the HLmaps development team.
+

@@ -1,0 +1,194 @@
+###############################################################################
+# INSTALL                                                                     #
+# - Installation procedure for hlmaps-php                                     #
+# - Copyright Scott McCrory and Brian Porter as part of the HLmaps            #
+#   distribution                                                              #
+# - Distributed under the GNU Public License - see docs for more info         #
+#  - http://hlmaps.sourceforge.net                                            #
+#                                                                             #
+###############################################################################
+# 
+###############################################################################
+
+
+Introduction
+------------
+HLmaps-php is designed to be identical in purpose as the Perl release, but
+requires a couple of differences when it comes to setup. Just pay attention
+and everyting will go fine.
+
+
+Extract Packages
+----------------
+If you're reading this, odds are you've already extracted the hlmaps_php
+package. All of the files in that package should be extracted to one place
+initially. I suggest something like /etc/hlmaps/ or C:\hlmaps\. This 
+directory will later be refered to as your hlmaps 'home' directory. Also, 
+if you'll be using the hlmaps_images package, extract those to one place as 
+well.
+
+
+Install Images
+--------------
+First install all of the JPG images from the latest hlmaps_images package
+(available from http://hlmaps.sourceforge.net) into a web-accessable 
+directory. This image package is shared among the following at least:
+
+hlmaps (http://hlmaps.sourceforge.net)
+hlds_ld.cgi (http://linuxhlds.halflife.org/)
+halfStats (http://www.halfstats.com)
+hlmon.pl (http://www.linuxquake.com/qsmon)
+cssserverstat (http://server.counter-strike.net/csserverstat/)
+hlstats (http://www.hlstats.org)
+
+If you use any of these, you can use one copy of the images for everything, and
+point each package to it.
+
+
+Set Up The Cron Script
+----------------------
+HLmaps uses a scheduled script (hlmaps.cron) to periodically collect info
+from the map directory, download dir, mapcycle, server logs, etc.  This makes
+HLmaps MUCH lighter on the server by not having to parse all those things
+for each web hit. There are two steps: 1) set up the scheduled job and 2) make 
+sure the data file has the right permissions for read and write.
+  
+    Win NT
+    ------
+    From Windows 2000 and XP (I'm not sure if NT4 had this feature), you 
+    can use the built in Task Scheduler to schedule hlmaps.cron to run every 
+    night. From the Start Menu, go to 'Settings', then 'Control Panel'. Open 
+    the 'Scheduled Tasks' folder and run "Add Scheduled Task". A wizard will 
+    open and guide you through setting up the basic task. This process may be 
+    a little different depending on what flavor of Window you have, but here 
+    is the important information: You should run "perl.exe" (which is usually 
+    installed in C:\Perl\bin) daily. (Or weekly if that suits you better.) Run 
+    this as a system Administrator. Somewhere along the line the wizard should 
+    give you the option to "Open Advanced Properties". Make sure you do this. 
+    In the "Run:" box of the Properties window, add the path to you hlmaps.cron
+    after the path to your perl.exe. For example...   
+         Run: C:\Perl\bin\perl.exe C:\hlmaps\hlmaps.cron
+    After than, the cron script should run at the scheduled time every day 
+    (or week). You should test this by entering the line above into a command 
+    prompt window. Check for the existance of the data file you specified in 
+    hlmaps.conf. if the data file exists, hlmaps.cron is set up correctly. If 
+    it doesn't, check your path names at the top of hlmaps.cron and those in 
+    hlmaps.conf. Also check the path you supplied to the Task Scheduler. If 
+    you're still having problems, first try posting in the forums at 
+    http://hlmaps.sourceforge.net first, then try emailing Brian 
+    (beporter@sourceforge.net).
+
+    Linux
+    -----
+    Setting up a cron job for Linux is very easy.  Simply copy hlmaps.cron to
+    the /etc/cron.daily directory and make it executable by typing:
+
+        cp hlmaps.cron /etc/cron.daily/hlmaps.cron
+        chown root.root /etc/cron.daily/hlmaps.cron
+        chmod 755 /etc/cron.daily/hlmaps.cron
+   
+    You should make sure that hlmaps.cron is pointing to the hlmaps.conf file
+    (look at the top of the script) and then test it by invoking it from the
+    command line:
+
+        /etc/cron.daily/hlmaps.cron
+    
+    If it takes a few seconds (or minutes) and then returns without saying
+    anything to you, then it (most likely) worked - check for 
+    /etc/hlmaps/hlmaps.data (or whatever your specified) for content. You're 
+    already half-way there!
+
+
+Copy the PHP Script and Templates
+---------------------------------
+The first step is to copy the hlmaps.php script into a web accessable directory 
+(usually /home/httpd/ or C:\Inetpub\wwwroot) and assign it the same owner and 
+group assignments and file permissions that you usually use for your other CGI 
+scripts.  For example, I run my Linux Apache daemon under an "httpd" user and 
+an "httpd" group.  So I'd do the following:
+
+   cp hlmaps.pl /home/httpd/cgi-bin/
+   chown httpd.httpd /home/httpd/cgi-bin/hlmaps.pl
+   chmod 555 /home/httpd/cgi-bin/hlmaps.pl
+   
+For NT users using IIS, make sure the file is 'read' accessable by the 
+"Browsers" user.
+
+The second step is to choose a style. Styles contain all of the formatting and 
+visual appearance cues for hlmaps. They consist of a complete HTML page that 
+has special embedded scripting calls to print the data on the page. I suggest 
+starting with the Default template located in the Styles/Default directory 
+inside your home hlmaps directory. Put 'list_template.html' 
+'single_template.html' and 'hlmaps.css' in the SAME directory as hlmaps.php. 
+
+
+Modify and Copy Preferences
+---------------------------
+(NOTE to NT users: Your paths in the .conf file, as well as in the beginning 
+of hlmaps.php can use "\" characters --OR-- the unix style "/" for DIR paths. 
+This applies only to the PHP files. The Perl files (like hlaps.cron) *require* 
+NT users to use normal Windows "\" style characters.)
+   
+Edit the hlmaps.conf.distrib file that came with the distribution to point to
+the correct paths and to use the templates you'd like. Then copy it to the 
+same directory as hlmaps.conf and assign appropriate owner, group and file 
+permissions so that your web server can read it. For example, running a Linux 
+Apache daemon under an "httpd" user and an "httpd" group, you would type the 
+following:
+
+   cp hlmaps.conf.distrib hlmaps.conf
+   chown httpd.httpd /etc/hlmaps/hlmaps.conf
+   chmod 444 /etc/hlmaps/hlmaps.conf
+   
+NT users using IIS should not have to worry about permissions for this file.
+
+
+Pointing Files to Each Other
+----------------------------
+(NOTE: Be sure to use *absolute* filesystem paths, not relative paths!)
+
+Make sure the following files know where other files are at:
+- hlmaps.php needs to know where its hlmaps.inc file is. Edit the top of the 
+  .php file to point to it. 
+- hlmaps.inc need to know where hlmaps.conf is. Edit the top of the .inc file 
+  to point to it.
+- hlmaps.cron also needs to know where hlmaps.conf is.
+- hlmaps.conf holds all other paths needed by the scripts.
+
+
+Set up Data File Permissions
+----------------------------
+As mentioned in the section above, you'll now need to make sure the hlmaps.data
+(run by the web server) can be read correctly.  I recommend:
+
+    chmod 744 /etc/hlmaps/hlmaps.data
+
+Again, NT users using IIS should not have to worry about permissions for this 
+file.
+
+
+Test and Troubleshoot
+---------------------
+Now fire up a browser and test the script by going to
+http://my.server.com/myPath/hlmaps.php and see if you get output. If the 
+images don't show up, then check the IMAGES_DIR and IMAGES_URL settings. If 
+it doesn't find maps, then check the SERVER_xxxx_DIR settings. If it doesn't 
+detect mapcycle inclusion, then check the MAPCYCLE setting. Again, make sure 
+your permissions are correct and also check to make sure that you don't have 
+a funky mapcycle.txt file which may have extra characters inside. I've heard 
+of several people fixing mapcycle detection by re-creating the file from 
+scratch using vi.
+
+Let me know if you have problems AFTER you've checked things over several 
+times and please be specific about what you see and what you've tried.
+
+
+MySQL Notes
+-----------
+MySQL is supported!! Once you have HLmaps working with just the text data
+file, go to the INSTALL.MySQL file to learn how to use a database as the 
+interrim data store.
+
+--
+Hope you enjoy!
+Scott and the HLmaps development team.

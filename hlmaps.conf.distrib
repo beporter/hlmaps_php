@@ -1,0 +1,102 @@
+###############################################################################
+# hlmaps.conf                                                                 #
+#  - The configuration file for HLmaps                                        #
+#  - Copyright Scott McCrory and Brian Porter                                 #
+#  - Distributed under the GPL terms - see docs for info                      #
+#  - http://hlmaps.sourceforge.net                                            #
+#                                                                             #
+###############################################################################
+# 
+###############################################################################
+#
+# **   MODIFY THESE FOR YOUR SYSTEM    **
+# ** Everything after a "#" is ignored **
+#
+
+
+#-----------------------------------------------------------------------------
+# HTML template locations relative to hlmaps.php
+LIST_TEMPLATE_FILE          = list_template.html
+SINGLE_TEMPLATE_FILE        = single_template.html
+
+
+
+#-----------------------------------------------------------------------------
+# Half-Life server constants - remember trailing "/" or "\" on DIRs and URLs!
+SERVER_BASE_DIR             = /usr/bin/half-life/cstrike/
+SERVER_MAP_DIR              = /usr/bin/half-life/cstrike/maps/
+SERVER_LOG_DIR              = /usr/bin/half-life/cstrike/logs/
+SERVER_LOG_SPAWN_MSG        = Loading map
+MAP_EXTENSION               = bsp
+MAPCYCLE                    = /usr/bin/half-life/cstrike/mapcycle.txt
+
+# If you're using a real-time server status program like csserverstat, hlds_ld,
+#    or hlmon.pl then put the URL for it here, otherwise make it null
+# I.E: REALTIME_STATUS_URL         = /cgi-bin/csserverstat.pl
+REALTIME_STATUS_URL         =
+
+# Thanks to qstat, we can tell what map is currently in play with this 
+# information
+SERVER                      = 127.0.0.1
+PORT                        = 27015
+PASS                        = password
+
+# This is the complete path (including the qstat executable itself) to qstat.
+QSTAT_EXEC                  = /etc/qstat/qstat
+
+# Maps which exist _inside_ of the mod (i.e. which don't have a .bsp file)
+#    Someone please tell me what others are or if these get changed!
+# CSTRIKE~    BUILT_IN_MAPS =
+# VALVE~      BUILT_IN_MAPS = datacore:stalkyard:undertow:subtransit:snark_pit:boot_camp:lambda_bunker:gasworks:frenzy:bounce
+# TFC~        BUILT_IN_MAPS = 2fort:well:rock2:cz2:hunted:push:badlands:crossover2:dustbowl:warpath:epicenter
+# SI~         BUILT_IN_MAPS = si_alley:si_laser:si_colony:si_moon:si_hirise:si_metropolis:si_military:si_tundra
+BUILT_IN_MAPS               =
+
+# Ignore all map runs with fewer than this many kills.  A value of 0 will
+#    count all map runs, where 1 will only count ones with 1 or more kills,
+#    etc.  Note that 0 is fastest during .cron runs.
+MAP_KILL_THRESHOLD          = 1
+
+#-----------------------------------------------------------------------------
+# Image file constants - remember trailing "/" or "\" on DIRs and URLs!
+IMAGES_DIR                  = /home/httpd/html/images/Maps/halflife/
+IMAGES_URL                  = /images/Maps/halflife/
+
+#-----------------------------------------------------------------------------
+# Download file constants - remember trailing "/" or "\" on DIRs and URLs!
+DOWNLOAD_DIR                = /home/ftp/pub/Games/cstrike/maps/
+DOWNLOAD_EXT                = zip
+DOWNLOAD_URL                = /download/Games/cstrike/maps/
+
+#-----------------------------------------------------------------------------
+# This is where hlmaps.cron puts it's data when it periodically collects it.
+#    It's also where hlmaps.pl will look for it's info when displaying output
+#    to web clients. It can either be a pathname to a read-write text file
+#    or "mysql" to use a database to hold the information (recommended for
+#    sites with tons of maps).  If you use MySQL then make sure the section
+#    below is also correct.
+#DATA_LOCATION              = mysql
+DATA_LOCATION               = /var/hlmaps.data
+
+#-----------------------------------------------------------------------------
+# These MySQL settings are only applicable if you set DATA_LOCATION = mysql
+#    above. If you did, then hlmaps.cron will put its data in the database and
+#    hlmaps.pl will look here for it's info when displaying output to web
+#    clients. Feel free to modify these if you want to rename the database or
+#    share it with another process. BUT don't add fields to the table specified
+#    because we DELETE and RE-CREATE it each time the cron script runs!!
+MYSQL_SERVER                = 127.0.0.1
+MYSQL_DATABASE              = HLmaps
+MYSQL_USER                  = HLmaps
+MYSQL_PASSWORD              = HLmaps
+MYSQL_TABLE                 = maps
+MYSQL_MAPNAME_FIELD         = mapname
+MYSQL_IMAGEURL_FIELD        = imageurl
+MYSQL_DOWNLOAD_FIELD        = downloadurl
+MYSQL_TEXTFILE_FIELD        = textfile
+MYSQL_POPULARITY_FIELD      = popularity
+MYSQL_MAPCYCLE_FIELD        = mapcycle
+MYSQL_SIZE_FIELD            = size
+MYSQL_MODDATE_FIELD         = moddate
+
+###############################################################################

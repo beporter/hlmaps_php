@@ -1,0 +1,43 @@
+###############################################################################
+# CONTRIBUTORS                                                                #
+#  - The wonderful people who have helped with HLmaps' development            #
+#  - Copyright Scott McCrory as part of the HLmaps distribution               #
+#  - Distributed under the GNU Public License - see docs for more info        #
+#  - http://hlmaps.sourceforge.net                                            #
+#                                                                             #
+###############################################################################
+# 
+###############################################################################
+
+TESTERS and DEBUGGERS
+   - Kevin Johnson      (First tester)
+   - Glen Muras         (FreeBSD 3.3 testing)
+   - Martin Hoemberg    (Windows NT testing)
+   - Justin Harris      (Base-0/1 printing bug)
+   - Matthew McClendon  (Logfile scanning bug)
+   - Jon Adams          (Default settings bug)
+   - Andrew Brampton    (SSI testing and feedback)
+   
+CODE CONTRIBUTIONS
+   - Michael Parks      (Update of Rod May's kkrcon code to determine current 
+                          map for hlds 1.1.0.6+)
+   - Glen Muras         (Fix for big log files)
+   - Martin Hoemberg    (Fixes for NT particulars)
+   - Justin Harris      (Misc. HTML improvements, kill thresholds)
+   - Ludwig Nussel      (Fix to handle DOS-formatted mapcycle.txt correctly)
+   - Jon Adams          (Fix for calculating number of pages)
+   - Rod May            (Code from kkrcon.pl)
+   - Brian Porter       (PHP release)
+
+MAP IMAGES and MISC HELP
+   - Rob Abbott
+   - Danny Collings
+   - David Wyble
+   - Ron Yacketta
+   - Mike Sessions
+   - Matt Chambers
+   - Tom Verzenni
+   - Brian Porter
+
+--
+Scott McCrory <smccrory@users.sourceforge.com>

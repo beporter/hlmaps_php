@@ -1,0 +1,40 @@
+<!--/*#####################################################################*/
+/*# single_template.html ([poor] german translation example)							#*/
+/*#  - HTML template for single-map view mode 														#*/
+/*#  - Copyright Brian Porter 																						#*/
+/*#  - Distributed under the GPL terms - see docs for info								#*/
+/*#  - http://hlmaps.sourceforge.net																			#*/
+/*# 																																			#*/
+/*######################################################################*/-->
+
+<html lang="de">
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=ISO-8859-1">
+		<title>hlmaps</title>
+		<link rel="stylesheet" href="hlmaps.css"> <!-- ### THIS URL IS RELATIVE TO hlmaps.php ### -->
+	</head>
+	<body>
+		<center>
+			<h2>HLmaps - einige</h2>
+			<h3>Klick auf die Karte zu Ruekgabe</h3>
+			<p>Etwas geht heir. Zum beispiel, <a href="/index.html">
+				 hyperlink fuer Homepage</a>.</p>
+
+			<table>
+				<? popNextMap(); /* must pop map info from data source into current map object before use */ ?>
+				<tr><th><font size=+1><? printThisMap_name();  ?></font></th></tr>
+				<tr><td><? printThisMap_image("Kein Bild");  ?></td></tr>
+				<tr><td><? printThisMap_popularity("", "-mal gespielt", "Nie gespielt");	?></td></tr>
+				<tr><td><? printThisMap_mapcycle("Nicht in mapcycle", " in die Drehung");  ?></td></tr>
+				<tr><td><? printThisMap_size();  ?></td></tr>
+				<tr><td><? printThisMap_modDate("Laeste Modifikation: ");  ?></td></tr>
+				<tr><td><? printThisMap_download("lad diese Karte nach", "keine nachladen");	?></td></tr>
+				<tr><td><? printThisMap_textfile();  ?></td></tr>
+			</table>
+								 
+			<br>
+			<pre><? printCredits(); /* Prints credit and contact information for hlmaps. 
+							###-THIS FUNCTION IS REQUIRED ON EVERY HLMAPS PAGE!-### */ ?></pre>
+		</center>
+	</body>
+</html>

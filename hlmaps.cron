@@ -1,0 +1,340 @@
+#!/usr/bin/perl -w
+###############################################################################
+#                                                                             #
+# hlmaps.cron - A script to (periodically) collect data for HLmaps            #
+#             - Copyright Scott McCrory                                       #
+#             - Distributed under the GPL terms - see the docs for info       #
+#             - http://hlmaps.sourceforge.net                                 #
+#                                                                             #
+###############################################################################
+# CVS $Id$
+###############################################################################
+
+use strict;                         # Requires us to declare all vars used
+use vars;                           # Supresses warnings during "require DBI"
+use File::stat;                     # Lets us get stats of map files
+
+######################## GLOBAL CONSTANTS #####################################
+# Make sure you modify this if you're running multiple instances of HLmaps
+#    on the same server (one pointing to a CS server, another for TFC, etc.)
+#    Make all other preference changes in that file (not here!).
+
+my $CONF_FILE           = "hlmaps.conf";
+
+###################### GLOBAL DEVELOPMENT CONSTANTS ###########################
+
+# Development constants - please don't mess with these
+my $VERSION             = "1.0, October 23, 2000";
+my $AUTHOR_NAME         = "Scott McCrory";
+my $AUTHOR_EMAIL        = "smccrory\@users.sourceforge.net";
+my $HOME_PAGE           = "http://hlmaps.sourceforge.net";
+
+############################# GLOBAL VARIABLES ################################
+
+my %prefs;          # Hash for user preferences as obtained from $CONF_FILE
+
+my %mapname;        # Hash to hold map's shortname
+my %textfile;       # Hash to hold map's textfile if present
+my %download;       # Hash to hold map's download URL
+my %image;          # Hash to hold map's image URL
+my %popularity;     # Hash to hold map's popularity (times run on server)
+my %mapcycle;       # Hash to hold map's inclusion in mapcycle.txt
+my %size;           # Hash to hold map's file size
+my %moddate;        # Hash to hold map's modification date
+
+################################## MAIN #######################################
+
+set_default_values();       # Fill in unspecified variables
+get_preferences();          # Load preferences from .conf file
+get_map_details();          # Scan map dir and get details
+get_mapcycle();             # See if map is in mapcycle.txt
+get_map_popularity();       # See how many times map's been played
+
+if ( $prefs{DATA_LOCATION} ne "mysql" ) {
+   output_text_data();
+} else {
+    output_mysql_data();        
+}
+
+############################### SUBROUTINES ###################################
+
+#------------------------------------------------------------------------------
+sub set_default_values {
+    # Set the default CGI parameters and variables if they were not specified
+    #   for us in the URL or the .conf
+    
+    $prefs{SERVER_LOG_SPAWN_MSG}        = "Spawning server";
+    $prefs{MAP_EXTENSION}               = "bsp";
+    $prefs{DOWNLOAD_EXT}                = "zip";
+    
+    $prefs{PAGE_BG_URL}                 = "";
+    $prefs{PAGE_BG_COLOR}               = "Black";
+    $prefs{PAGE_TEXT_COLOR}             = "Yellow";
+    $prefs{PAGE_LINK_COLOR}             = "Lime";
+    $prefs{PAGE_V_LINK_COLOR}           = "Aqua";
+    $prefs{PAGE_A_LINK_COLOR}           = "Green";
+    
+    $prefs{TABLE_BORDER_LIGHT_COLOR}    = "Aqua";
+    $prefs{TABLE_BORDER_DARK_COLOR}     = "Green";
+    $prefs{TABLE_NORM_HEAD_COLOR}       = "Navy";
+    $prefs{TABLE_SORT_HEAD_COLOR}       = "Blue";
+    
+    $prefs{DEFAULT_MAPS_PER_PAGE}       = "20";
+    $prefs{MAP_KILL_THRESHOLD}          = "0";
+  
+    $prefs{PAGE_HEADING}                = "HLmaps Server Map Listing";
+    $prefs{PAGE_SUBHEADING}             = "Click the column headings to sort by them";
+    $prefs{PAGE_MAPCOUNT_PRE}           = "Total of";
+    $prefs{PAGE_MAPCOUNT_SUF}           = "maps found";
+    $prefs{PAGE_DOWNLOAD}               = "Download this map";
+    $prefs{PAGE_MAPS_PER_PAGE}          = "Maps Per Page";
+    $prefs{PAGE_REFRESH}                = "Refresh";
+    
+    $prefs{TABLE_MAPNAME_COLUMN}        = "Map Name";
+    $prefs{TABLE_IMAGE_COLUMN}          = "Image";
+    $prefs{TABLE_POPULARITY_COLUMN}     = "Popularity";
+    $prefs{TABLE_MAPCYCLE_COLUMN}       = "In Map Cycle";
+    $prefs{TABLE_SIZE_COLUMN}           = "Size";
+    $prefs{TABLE_MODDATE_COLUMN}        = "Mod Date";
+    $prefs{TABLE_POPULARITY_COUNT_PRE}  = "Played";
+    $prefs{TABLE_POPULARITY_COUNT_SUF}  = "time(s)";
+    $prefs{TABLE_POPULARITY_NEVER}      = "Never Played";
+    $prefs{TABLE_MAPCYCLE_YES}          = "In Map Cycle";
+    $prefs{TABLE_MAPCYCLE_NO}           = "No";
+    $prefs{TABLE_IMAGE_NO}              = "Image Not Available";
+    
+    $prefs{DATA_LOCATION}               = "/var/hlmaps.data";
+    
+    $prefs{MYSQL_SERVER}                = "localhost";
+    $prefs{MYSQL_DATABASE}              = "HLmaps";
+    $prefs{MYSQL_USER}                  = "HLmaps";
+    $prefs{MYSQL_PASSWORD}              = "HLmaps";
+    $prefs{MYSQL_TABLE}                 = "maps";
+    $prefs{MYSQL_MAPNAME_FIELD}         = "mapname";
+    $prefs{MYSQL_IMAGEURL_FIELD}        = "imageurl";
+    $prefs{MYSQL_DOWNLOAD_FIELD}        = "downloadurl";
+    $prefs{MYSQL_TEXTFILE_FIELD}        = "textfile";
+    $prefs{MYSQL_POPULARITY_FIELD}      = "popularity";
+    $prefs{MYSQL_MAPCYCLE_FIELD}        = "mapcycle";
+    $prefs{MYSQL_SIZE_FIELD}            = "size";
+    $prefs{MYSQL_MODDATE_FIELD}         = "moddate";
+}
+
+# ----------------------------------------------------------------------------
+sub get_preferences {
+    # Load HLmaps preferences from $CONF_FILE
+
+    my $var;                        # Variable name in .conf
+    my $value;                      # Value of variable in .conf
+
+    open(CONF, "$CONF_FILE") || die "Sorry, I couldn't open the preferences file $CONF_FILE: $!\n";
+    while (<CONF>) {
+        chomp;                      # no newline
+        s/#.*//;                    # no comments
+        s/^\s+//;                   # no leading white
+        s/\s+$//;                   # no trailing white
+        next unless length;         # anything left?
+        ($var, $value) = split(/\s*=\s*/, $_, 2);
+        $prefs{$var} = $value;      # load the untainted value into our hash of vars
+    }
+    close(CONF);
+}
+
+#------------------------------------------------------------------------------
+sub get_map_details {
+    # Open up server map directory and get list of all *.bsp files there
+    #    then cycle through each file and see if a corresponding image and download exists
+    #    and then print a table row with the pertainent information
+    
+    my @filelist;       # List of files
+    my $size;           # Map file size
+    my $filename;       # Map filename for loop
+    my $shortname;      # Map short filename
+    my $inode;          # inode for file stat gathering
+    my $dlfilename;     # Download filename, if it exists
+    my $imgfilename;    # Image filename, if it exists
+    my @builtinmaps;    # Array for built-in maps
+    my $bimap;          # A single built-in map
+    my $textfilename;   # A temporary var for a txt filename
+
+    # Scan the map directory for maps and load them into our filelist array
+    opendir(DIR, "$prefs{SERVER_MAP_DIR}") || die "Couldn't read map dir $prefs{SERVER_MAP_DIR}: $!\n";
+    @filelist = grep { /\.$prefs{MAP_EXTENSION}$/ } readdir(DIR);
+    closedir(DIR);
+
+    # Add built-in maps to the filelist array
+    if ($prefs{BUILT_IN_MAPS}) {
+        @builtinmaps = split(':', $prefs{BUILT_IN_MAPS});   # Read list into temp array
+        foreach $bimap (@builtinmaps) {                     # Cycle through them
+            push (@filelist, $bimap);                       # And add to the big list
+        }
+    }
+    
+    # Process each map and get whatever details we can
+    foreach $filename (@filelist) {
+
+        $shortname = $filename;
+        $shortname =~/(\w+)/;                   # and untaint it
+        $shortname = $1;                        #
+
+        # Get the map file's modification date and size
+        if ( $inode = stat("$prefs{SERVER_MAP_DIR}" . "$filename") ) {
+            $moddate{"$shortname"} = $inode->mtime; # In epoch seconds
+            $size{"$shortname"} = int($inode->size);
+        } else {
+            $moddate{"$shortname"} = 0;         # In epoch seconds
+            $size{"$shortname"} = 0;
+        }
+        
+        # Get corresponding txt file if it exists
+        $textfilename = "$prefs{SERVER_MAP_DIR}" . "$shortname" . ".txt";
+        if ( -e $textfilename ) {
+            $textfile{"$shortname"} = "$textfilename";
+        } else {
+            $textfile{"$shortname"} = "#na#";
+        }
+
+        $mapname{"$shortname"} = "$shortname";
+        $download{"$shortname"} = $download{"$shortname"} || "#na#";
+        $image{"$shortname"} = $image{"$shortname"} || "#na#";
+        $popularity{"$shortname"} = 0;
+        $mapcycle{"$shortname"} = 9999;
+
+        # Get the map's corresponding download link if it exists
+        $dlfilename = "$prefs{DOWNLOAD_DIR}" . "$shortname.$prefs{DOWNLOAD_EXT}";
+        if ($dlfilename && -e $dlfilename) {
+            $download{"$shortname"} = "$prefs{DOWNLOAD_URL}" . "$shortname.$prefs{DOWNLOAD_EXT}";
+        }
+
+        # Get the map's corresponding image file if it exists
+        $imgfilename = "$prefs{IMAGES_DIR}" . "$shortname" . ".jpg";
+        if ($imgfilename && -e $imgfilename) {
+            $image{"$shortname"} = "$prefs{IMAGES_URL}" . "$shortname" . ".jpg";
+        }
+    }
+}
+
+#------------------------------------------------------------------------------
+sub get_mapcycle {
+    # See if a map is in the mapcycle and if so, record it's position.
+
+    my $position = 1;       # Used to track map's position in the mapcycle
+    my $hlmap;              # The map we're working with in the loop
+    my @sortkeys;           # Which field we're going to sort by
+
+    # To know if a map is in the current mapcycle, we'll read the list first
+    open(MAPCYC,"$prefs{MAPCYCLE}") || die "Sorry, I couldn't open the mapcycle $prefs{MAPCYCLE}: $!\n";
+    while (<MAPCYC>) {
+        chop;                   # Take off the newline at the end
+        s/\r$//;                # as well as any DOS carriage returns
+        if ( $mapname{"$_"} ) {
+            $mapcycle{"$_"} = "$position";
+        }
+        ++$position;
+    }
+    close(MAPCYC);
+}
+
+#------------------------------------------------------------------------------
+sub get_map_popularity {
+    # To know how popular a map is, we'll parse the log files for startup msgs
+    
+    my @filelist;           # List of files
+    my($filename, $line);
+
+    opendir(DIR, "$prefs{SERVER_LOG_DIR}") || die "Sorry, couldn't read directory $prefs{SERVER_LOG_DIR}: $!\n";
+    @filelist = readdir(DIR);
+    closedir(DIR);
+    foreach $filename (@filelist) {
+        if ($filename !~ /log$/) { next; }
+        open(LOGFILE, $prefs{SERVER_LOG_DIR}.$filename) or die "Sorry, couldn't open file $prefs{SERVER_LOG_DIR}.$filename: $!\n";
+        while ($line = <LOGFILE>) {
+            if ($line =~ /$prefs{SERVER_LOG_SPAWN_MSG} \"(\w+)\"/) {
+                if ($mapname{$1}) { ++$popularity{$1}; }
+                next;
+            }
+        }
+        close(LOGFILE);
+    }
+}
+
+#------------------------------------------------------------------------------
+sub output_text_data {
+    # Write the data collected to the text file specified in the .conf file
+
+    my $hlmap;          # The map we're working with in the loop
+    my @sortkeys;       # Which field we're going to sort by
+
+    # Sort by ascending mapname for human readability
+    @sortkeys = sort { $mapname{$a} cmp $mapname{$b} } keys %mapname;
+
+    # Open the output file (and overwrite it)
+    open (DATA,">$prefs{DATA_LOCATION}") || die "Sorry, couldn't write to output file $prefs{DATA_LOCATION}: $!\n";
+
+    # Now write them all out!
+    foreach $hlmap (@sortkeys) {
+        print DATA "$mapname{$hlmap},$textfile{$hlmap},$download{$hlmap},$image{$hlmap},$popularity{$hlmap},$mapcycle{$hlmap},$size{$hlmap},$moddate{$hlmap}\n";
+    }
+
+    # Close the output file
+    close(DATA);
+
+}
+    
+#------------------------------------------------------------------------------
+sub output_mysql_data {
+    # Write the data collected to the MySQL database specified in the .conf file
+    
+    use DBI;
+#print "Uncomment the 'use DBI;' line in sub output_mysql_data to enable DB features!\n";
+
+    my $hlmap;          # The map we're working with in the loop
+    my @sortkeys;       # Which field we're going to sort by
+
+    # Set up database variables and handles
+    my ($dsn) = "DBI:mysql:$prefs{MYSQL_DATABASE}:$prefs{MYSQL_SERVER}";
+    my ($user_name) = $prefs{MYSQL_USER};
+    my ($password) = $prefs{MYSQL_PASSWORD};
+    my ($dbh, $sth);
+    my (@ary);
+    my (%attr) =
+    (
+        PrintError => 0,
+        RaiseError => 0
+    );
+    
+    # Connect to the database
+    $dbh = DBI->connect ($dsn, $user_name, $password, \%attr) or mysql_bail_out ("Cannot connect to server '$prefs{MYSQL_SERVER}' into database '$prefs{MYSQL_DATABASE}' with user '$prefs{MYSQL_USER}' and password '$prefs{MYSQL_PASSWORD}'");
+    
+    # Drop existing table
+    $sth = $dbh->prepare ("DROP TABLE IF EXISTS $prefs{MYSQL_TABLE}") or mysql_bail_out ("Cannot prepare to drop existing table '$prefs{MYSQL_TABLE}'");
+    $sth->execute () or mysql_bail_out ("Cannot execute command to drop existing table '$prefs{MYSQL_TABLE}'");
+
+    # Create new table
+    $sth = $dbh->prepare ("CREATE TABLE $prefs{MYSQL_TABLE} ($prefs{MYSQL_MAPNAME_FIELD} VARCHAR(20) NOT NULL, $prefs{MYSQL_IMAGEURL_FIELD} VARCHAR(100), $prefs{MYSQL_DOWNLOAD_FIELD} VARCHAR(100), $prefs{MYSQL_TEXTFILE_FIELD} LONGTEXT, $prefs{MYSQL_POPULARITY_FIELD} INT UNSIGNED, $prefs{MYSQL_MAPCYCLE_FIELD} INT UNSIGNED, $prefs{MYSQL_SIZE_FIELD} INT UNSIGNED, $prefs{MYSQL_MODDATE_FIELD} INT UNSIGNED, PRIMARY KEY ($prefs{MYSQL_MAPNAME_FIELD}) )") or mysql_bail_out ("Cannot prepare to create maps table '$prefs{MYSQL_TABLE}'");
+    $sth->execute () or mysql_bail_out ("Cannot execute command to create maps table '$prefs{MYSQL_TABLE}'");
+    
+    # Set active table
+    $sth = $dbh->prepare ("USE $prefs{MYSQL_DATABASE}") or mysql_bail_out ("Cannot use maps table '$prefs{MYSQL_TABLE}'");
+    $sth->execute () or mysql_bail_out ("Cannot execute command to use maps table '$prefs{MYSQL_TABLE}'");
+    
+    # Now write all the (sorted) details out to the database
+    @sortkeys = sort { $mapname{$a} cmp $mapname{$b} } keys %mapname;
+    foreach $hlmap (@sortkeys) {
+       $sth = $dbh->prepare ("INSERT $prefs{MYSQL_TABLE} ($prefs{MYSQL_MAPNAME_FIELD},$prefs{MYSQL_IMAGEURL_FIELD},$prefs{MYSQL_DOWNLOAD_FIELD},$prefs{MYSQL_TEXTFILE_FIELD},$prefs{MYSQL_POPULARITY_FIELD},$prefs{MYSQL_MAPCYCLE_FIELD},$prefs{MYSQL_SIZE_FIELD},$prefs{MYSQL_MODDATE_FIELD}) VALUES('$mapname{$hlmap}','$image{$hlmap}','$download{$hlmap}','$textfile{$hlmap}','$popularity{$hlmap}','$mapcycle{$hlmap}','$size{$hlmap}','$moddate{$hlmap}')") or mysql_bail_out ("Cannot prepare to insert record into table '$prefs{MYSQL_TABLE}'");
+       $sth->execute () or mysql_bail_out ("Cannot execute command to insert record into table '$prefs{MYSQL_TABLE}' with map '$mapname{$hlmap}'");
+    }
+
+    # Close the database and clean up
+    $sth->finish () or mysql_bail_out ("Cannot finish database cleanup");
+    $dbh->disconnect () or mysql_bail_out ("Cannot disconnect from database");
+} 
+
+#------------------------------------------------------------------------------
+sub mysql_bail_out {
+    # Print the full text error messages for any database problems  
+    my ($message) = shift;
+#    die "$message\nError $DBI::err ($DBI::errstr)\n";
+}
+
+###############################################################################
